@@ -1,0 +1,89 @@
+name: Build index
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-index:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create index.pb
+        run: |
+          python3 - <<'PY'
+          import struct
+
+          def varint(n):
+              out = bytearray()
+              while n > 127:
+                  out.append((n & 127) | 128)
+                  n >>= 7
+              out.append(n)
+              return bytes(out)
+
+          def field_string(num, value):
+              b = value.encode()
+              return varint((num << 3) | 2) + varint(len(b)) + b
+
+          def field_bytes(num, value):
+              return varint((num << 3) | 2) + varint(len(value)) + value
+
+          def field_varint(num, value):
+              return varint(num << 3) + varint(value)
+
+          # Source
+          source = b""
+          source += field_varint(1, 7374498796507972405)
+          source += field_string(2, "MangaRama")
+          source += field_string(3, "uk")
+          source += field_string(4, "https://mangarama.com.ua")
+
+          # Resources
+          resources = b""
+          resources += field_string(
+              1,
+              "https://raw.githubusercontent.com/liserdi/MangaRama-Mihon-Store/main/apk/tachiyomi-uk.mangarama-v1.6.56.apk"
+          )
+
+          # Extension
+          extension = b""
+          extension += field_string(1, "MangaRama")
+          extension += field_string(2, "eu.kanade.tachiyomi.extension.uk.mangarama")
+          extension += field_bytes(3, resources)
+          extension += field_string(4, "1.6")
+          extension += field_varint(5, 1)
+          extension += field_string(6, "1.6.56")
+          extension += field_varint(7, 1)
+          extension += field_bytes(8, source)
+
+          # ExtensionList
+          extension_list = field_bytes(1, extension)
+
+          # Contact
+          contact = field_string(1, "https://mangarama.com.ua")
+
+          # Index
+          index = b""
+          index += field_string(1, "MangaRama")
+          index += field_string(2, "UA")
+          index += field_string(
+              3,
+              "25596f5c6d704d0eac0ea8d74a20b6e071557a2f972ff074bba2908d4cab5f47"
+          )
+          index += field_bytes(4, contact)
+          index += field_bytes(101, extension_list)
+
+          open("index.pb", "wb").write(index)
+          print("index.pb created")
+          PY
+
+      - name: Commit index.pb
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.pb
+          git commit -m "Update extension index" || exit 0
+          git push
