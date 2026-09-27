@@ -1,6 +1,31 @@
 {
   "name": "MangaRama",
   "badgeLabel": "UA",
-  "signingKey": "25:59:6F:5C:6D:70:4D:0E:AC:0E:A8:D7:4A:20:B6:E0:71:55:7A:2F:97:2F:F0:74:BB:A2:90:8D:4C:AB:5F:47",
-  "website": "https://mangarama.com.ua"
+  "signingKey": "25596f5c6d704d0eac0ea8d74a20b6e071557a2f972ff074bba2908d4cab5f47",
+  "contact": {
+    "website": "https://mangarama.com.ua"
+  },
+  "extensionList": {
+    "extensions": [
+      {
+        "name": "MangaRama",
+        "packageName": "eu.kanade.tachiyomi.extension.uk.mangarama",
+        "resources": {
+          "apkUrl": "https://raw.githubusercontent.com/liserdi/MangaRama-Mihon-Store/main/apk/tachiyomi-uk.mangarama-v1.6.56.apk",
+          "iconUrl": "https://mangarama.com.ua/favicon.ico"
+        },
+        "extensionLib": "1.6",
+        "versionCode": 1,
+        "versionName": "1.6.56",
+        "sources": [
+          {
+            "id": 7374498796507972405,
+            "name": "MangaRama",
+            "language": "uk",
+            "homeUrl": "https://mangarama.com.ua"
+          }
+        ]
+      }
+    ]
+  }
 }
