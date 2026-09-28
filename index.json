@@ -19,12 +19,13 @@
         "versionName": "1.6.56",
         "sources": [
           {
-            "id": 7374498796507972405,
+            "id": 7374498796507973000,
             "name": "MangaRama",
             "language": "uk",
             "homeUrl": "https://mangarama.com.ua"
           }
-        ]
+        ],
+        "contentWarning": 1
       }
     ]
   }
